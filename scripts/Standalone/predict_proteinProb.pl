@@ -41,8 +41,6 @@ sub print_if_verbose {
     }
 }
 
-print_if_verbose("verboseness $verbose", $verbose);
-
 my $wordvec_file = $Bin . "/../../datasets/wordvec/uniprot_sprot70_size60.txt";
 die "Cannot detect wordvec_file:$wordvec_file" unless -e $wordvec_file;
 
