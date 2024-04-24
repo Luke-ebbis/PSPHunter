@@ -7,6 +7,11 @@ A fork made by Sibbe Bakker to clear the dependencies. Start the installation
 of the dependencies using
 
 ```bash
+git clone git@github.com:Luke-ebbis/PSPHunter.git
+cd PSPhunter
+# install pixi
+curl -fsSL https://pixi.sh/install.sh | bash
+# setup the pixi environment
 pixi install
 ```
 then start the prediction on your fasta
@@ -14,6 +19,9 @@ then start the prediction on your fasta
 ```bash
 pixi run predict -i fasta.fa
 ```
+
+The output flag `-o` is a directory that is not nested, `-o output` will be ok, but `-o analysis/output/` produces an
+error.
 
 ## About
 
