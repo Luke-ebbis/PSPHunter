@@ -41,11 +41,11 @@ sub print_if_verbose {
     }
 }
 
-print_if_verbose("verboseness $verbose", $verbose);
 
 my $wordvec_file = $Bin . "/../../datasets/wordvec/uniprot_sprot70_size60.txt";
 die "Cannot detect wordvec_file:$wordvec_file" unless -e $wordvec_file;
 
+# TODO What is the purpose of this test file?
 my $test_fa_file = $Bin . "/../../datasets/testSun.fasta";
 die "Cannot detect testing data set:$test_fa_file" unless -e $test_fa_file;
 
@@ -96,7 +96,6 @@ close $wv_fh;
 ####Split fasta into different truncations
 my $fasta_dir = $out_folder . "/fasta/";
 mkdir $fasta_dir;
-print_if_verbose("making output folder $fasta_dir", $verbose);
 
 chomp( my @fastas = <$in_fasta_fh> );
 close $in_fasta_fh;
@@ -104,12 +103,17 @@ close $in_fasta_fh;
 my %fa   = ();
 my $pro  = "";
 my $flag = 0;
+
+my $jobsize = 0+@fastas;
+print_if_verbose("job size is $jobsize \n", $verbose);
 foreach my $fasta (@fastas) {
     $fasta =~ s/\r//g;
     if ( $fasta =~ /^>(.*)/ ) {
-        $pro = $1;
-        $pro =~ s/\s+|\*|\.|\[|\]|\"|\||\(|\)|\=//g;
+        $pro = $1; # $1 is the last header found
+        # Now $pro is the current header
+        $pro =~ s/\s+|\*|\.|_|\[|\]|\"|\||\(|\)|\=//g;
         $pro = substr( $pro, 0, 15 );
+        print_if_verbose("Starting vectorisation of $pro \n", $verbose);
         open my $pro_fh, ">>$fasta_dir" . "$pro.fasta" or die "$!";
         print $pro_fh ">", $pro, "\n";
         $fa{$pro}++;
@@ -127,10 +131,11 @@ foreach my $fasta (@fastas) {
 
 print scalar keys %fa, "\n";
 my $proNo = scalar keys %fa;
-
+print_if_verbose("$proNo pro no variable\n", $verbose);
 my $o_dir = $out_folder . "/ML/";
 mkdir $o_dir;
 
+# The length of the embedded vector
 my $size = 60;
 
 if ( $flag == 0 ) {
