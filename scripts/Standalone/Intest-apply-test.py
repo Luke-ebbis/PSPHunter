@@ -12,8 +12,9 @@ direct2=sys.argv[2]
 re=sys.argv[3]
 #matrix = np.loadtxt(direct + 'CVinput.txt',dtype=bytes).astype(str)
 
-        
 clf = joblib.load(direct1 + "train_model.m")
+
+# The model must have an embedded length of 60 tokens
 matrixI = np.loadtxt(direct2 + 'Intestinput.txt')
 matrixI = matrixI.reshape(matrixI.shape[0], -1)
 
@@ -23,7 +24,8 @@ tagI = np.array(matrixI[:,0])
 model_test = featureI
 predict_prob_y = clf.predict_proba(model_test)
 
-f = open(direct2 + 'InProbphase' + re + '.txt','w')
-for i in range(len(predict_prob_y)):
-	f.write('{:.3f}\n'.format(predict_prob_y[:,1][i]))
-f.close()
+
+filename = f"{direct2}InProbphase{re}.txt"
+with open(filename, "w") as f:
+    for i in range(len(predict_prob_y)):
+        f.write('{:.3f}\n'.format(predict_prob_y[:,1][i]))
