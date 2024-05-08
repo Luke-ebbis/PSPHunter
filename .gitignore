@@ -4,4 +4,5 @@
 .fasta*
 *.swp
 .pixi/
-
+test
+.vim
